@@ -46,7 +46,7 @@ license: MIT
 使用项目中的 CLI 工具进行转换：
 
 ```bash
-npx ts-node ./scripts/qqmusic-cli.ts "<用户提供的链接>"
+node .claude/skills/qqmusic-converter/scripts/qqmusic-cli.js "<用户提供的链接>"
 ```
 
 ### 3. 解析输出
@@ -74,7 +74,7 @@ CLI 工具会返回 JSON 格式的结果：
 **AI 执行：**
 
 ```bash
-npx ts-node ./scripts/qqmusic-cli.ts "https://c6.y.qq.com/base/fcgi-bin/u?__=AW9Aff"
+node .claude/skills/qqmusic-converter/scripts/qqmusic-cli.js "https://c6.y.qq.com/base/fcgi-bin/u?__=AW9Aff"
 ```
 
 **返回给用户：**
@@ -99,11 +99,11 @@ npx ts-node ./scripts/qqmusic-cli.ts "https://c6.y.qq.com/base/fcgi-bin/u?__=AW9
 
 该功能通过以下方式实现：
 
-1. 使用 axios 模拟 iOS Safari 浏览器访问 QQ 音乐页面
+1. 使用 Node.js 原生 https 模块模拟 iOS Safari 浏览器访问 QQ 音乐页面
 2. 从 HTML 中提取 `__ssrFirstPageData__` SSR 数据
 3. 解析 JSON 获取歌曲 mid
 4. 生成 qqmusic:// 格式的 deeplink
 
 相关源码：
 
-- `./scripts/qqmusic-cli.ts` - CLI 工具入口
+- `.claude/skills/qqmusic-converter/scripts/qqmusic-cli.js` - CLI 工具入口
