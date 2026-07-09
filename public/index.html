@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>QQ 音乐链接转换</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #888;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e8e8e8;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #333;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #667eea;
+    }
+
+    input[type="text"]::placeholder {
+      color: #bbb;
+    }
+
+    .btn-convert {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      -webkit-appearance: none;
+    }
+
+    .btn-convert:active {
+      transform: scale(0.98);
+    }
+
+    .btn-convert:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .result-group {
+      margin-top: 24px;
+      display: none;
+    }
+
+    .result-group.show {
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      padding: 12px 14px;
+      border: 2px solid #e8e8e8;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #333;
+      background: #f9f9fb;
+      resize: none;
+      outline: none;
+    }
+
+    .btn-copy {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      background: #f0f0f5;
+      color: #333;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .btn-copy:active {
+      background: #e0e0e8;
+    }
+
+    .error-msg {
+      color: #e74c3c;
+      font-size: 13px;
+      text-align: center;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    @media (max-width: 380px) {
+      .card { padding: 28px 20px; }
+      .title { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="title">QQ 音乐链接转换</div>
+    <div class="subtitle">粘贴分享链接，一键生成深链接</div>
+
+    <label for="inputUrl">分享链接</label>
+    <input type="text" id="inputUrl" placeholder="https://c6.y.qq.com/base/fcgi-bin/u?__=xxx" autocomplete="off">
+
+    <button class="btn-convert" id="btnConvert" onclick="convert()">转换</button>
+
+    <div class="result-group" id="resultGroup">
+      <label>转换结果</label>
+      <textarea id="resultText" readonly></textarea>
+      <button class="btn-copy" id="btnCopy" onclick="copyResult()">复制到剪贴板</button>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <script>
+    const inputUrl = document.getElementById('inputUrl');
+    const btnConvert = document.getElementById('btnConvert');
+    const resultGroup = document.getElementById('resultGroup');
+    const resultText = document.getElementById('resultText');
+    const errorMsg = document.getElementById('errorMsg');
+
+    inputUrl.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') convert();
+    });
+
+    async function convert() {
+      const url = inputUrl.value.trim();
+      if (!url) {
+        showError('请输入分享链接');
+        return;
+      }
+
+      btnConvert.disabled = true;
+      btnConvert.textContent = '转换中...';
+      errorMsg.classList.remove('show');
+      resultGroup.classList.remove('show');
+
+      try {
+        const res = await fetch('/api/convert', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await res.json();
+
+        if (data.code !== 0) {
+          showError(data.message);
+          return;
+        }
+
+        resultText.value = data.data.deepLink;
+        resultGroup.classList.add('show');
+      } catch (err) {
+        showError('网络错误，请稍后重试');
+      } finally {
+        btnConvert.disabled = false;
+        btnConvert.textContent = '转换';
+      }
+    }
+
+    async function copyResult() {
+      const text = resultText.value;
+      try {
+        await navigator.clipboard.writeText(text);
+        showCopied();
+      } catch {
+        resultText.select();
+        document.execCommand('copy');
+        showCopied();
+      }
+    }
+
+    function showCopied() {
+      const btn = document.getElementById('btnCopy');
+      btn.textContent = '已复制';
+      setTimeout(() => { btn.textContent = '复制到剪贴板'; }, 1500);
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.classList.add('show');
+    }
+  </script>
+</body>
+</html>

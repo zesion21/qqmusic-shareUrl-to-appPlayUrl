@@ -1,0 +1,44 @@
+{
+  "name": "ts-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "tsc --build --clean && tsc",
+    "start": "node dist/index.js",
+    "pm2:start": "pm2 start dist/index.js --name qqmusic",
+    "pm2:log": "pm2 logs qqmusic",
+    "pm2:stop": "pm2 stop qqmusic",
+    "clear": "tsc --build --clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zesion21/ts-template.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zesion21/ts-template/issues"
+  },
+  "homepage": "https://github.com/zesion21/ts-template#readme",
+  "devDependencies": {
+    "@types/koa": "^3.0.3",
+    "@types/koa-bodyparser": "^4.3.13",
+    "@types/koa-router": "^7.4.9",
+    "@types/koa-static": "^4.0.4",
+    "@types/node": "^24.13.3",
+    "pm2": "^6.0.13",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "axios": "^1.18.1",
+    "koa": "^3.2.1",
+    "koa-bodyparser": "^4.4.1",
+    "koa-router": "^14.0.0",
+    "koa-static": "^5.0.0",
+    "log4js": "^6.9.1"
+  }
+}

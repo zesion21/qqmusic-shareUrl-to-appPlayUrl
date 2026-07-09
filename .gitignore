@@ -1,0 +1,6 @@
+node_modules
+src/log/*
+dist/*
+.mimocode
+mimocode.json
+AGENTS.md
