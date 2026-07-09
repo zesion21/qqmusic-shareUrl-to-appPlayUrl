@@ -10,7 +10,7 @@ license: MIT
 
 ## 使用场景
 
-当用户提供 QQ 音乐分享链接（如 `https://y.qq.com/n/ryqq/songDetail/xxx`）并希望：
+当用户提供 QQ 音乐分享链接（如 `https://c6.y.qq.com/base/fcgi-bin/u?__=AW9Aff`）并希望：
 
 - 获取可在 iOS/macOS 上直接打开的 qqmusic:// 链接
 - 获得歌曲的 mid 标识
@@ -19,8 +19,7 @@ license: MIT
 
 用户输入应为 QQ 音乐分享链接，格式如：
 
-- `https://y.qq.com/n/ryqq/songDetail/{songmid}`
-- `https://y.qq.com/n/ryqq/playlist/{playlistid}`
+- `https://c6.y.qq.com/base/fcgi-bin/u?__=AW9Aff`
 
 ## 输出格式
 
@@ -69,13 +68,13 @@ CLI 工具会返回 JSON 格式的结果：
 **用户输入：**
 
 ```
-帮我转换这个 QQ 音乐链接：https://y.qq.com/n/ryqq/songDetail/003OUlho2HcRHC
+帮我转换这个 QQ 音乐链接：https://c6.y.qq.com/base/fcgi-bin/u?__=AW9Aff
 ```
 
 **AI 执行：**
 
 ```bash
-npx ts-node ./scripts/qqmusic-cli.ts "https://y.qq.com/n/ryqq/songDetail/003OUlho2HcRHC"
+npx ts-node ./scripts/qqmusic-cli.ts "https://c6.y.qq.com/base/fcgi-bin/u?__=AW9Aff"
 ```
 
 **返回给用户：**
